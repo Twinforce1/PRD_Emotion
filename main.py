@@ -2,6 +2,7 @@ import telebot
 from telebot import types  # для указание типов
 import config
 import random
+from emo import PlaylistCreator
 import os
 
 bot = telebot.TeleBot('6576799018:AAEc7sN9LskdEWqt9h8-k819UU1K8LioUSY')
@@ -38,26 +39,16 @@ def photo_handler(message):
 
     # Отправка музыки
 
-    music_directories = ['Грусть', 'Злость', 'Отвращение', 'Радость', 'Страх',
-                         'Удивление']
-    num_songs_to_send = 10
+    music_directories = ['sad', 'angry', 'disgust', 'happy', 'fear',
+                         'surprise']
     # Получаем слово из нейронки
-    text =
+    playlist_creator = PlaylistCreator(file_name)
+    folder_list = playlist_creator.create_playlist()
 
-    for _ in range(num_songs_to_send):
-        # Выбираем папку
-        if "Грусть" in text:
-            folder = 'Грусть'  # Замените 'folder1' на имя первой папки
-        elif "Злость" in text:
-            folder = 'Злость'  # Замените 'folder2' на имя второй папки
-        elif "Отвращение" in text:
-            folder = 'Отвращение'  # Замените 'folder3' на имя третьей папки
-        elif "Радость" in text:
-            folder = 'Радость'  # Замените 'folder4' на имя четвертой папки
-        elif "Страх" in text:
-            folder = 'Страх'  # Замените 'folder5' на имя пятой папки
-        elif "Удивление" in text:
-            folder = 'Удивление'  # Замените 'folder6' на имя шестой папки
+    for i in range(len(folder_list)):
+        folder = folder_list[i]
+        if folder_list[i] == 'neutral':
+            folder = random.choice(music_directories)
         # Получаем список файлов в выбранной папке
         songs_in_directory = os.listdir(folder)
         if songs_in_directory:
