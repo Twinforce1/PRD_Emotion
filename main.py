@@ -56,13 +56,31 @@ def photo_handler(message):
         else:
             bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
 
-@bot.message_handler(content_types = ['video'])
-def video_handler(message):
-    video = message.video[-1]
-    file_id = photo.file_id
+
+
+#@bot.message_handler(content_types = ['video'])
+#def video_handler(message):
+#    video = message.video[-1]
+#    file_id = video.file_id
+#   file_info = bot.get_file(file_id)
+#    file = bot.download_file(file_info.file_path)
+ #   file_name = 'uploaded_video.mov'
+#    with open(file_name, 'wb') as f:
+#        f.write(file)
+@bot.message_handler(content_types=['video'])
+def handle_video(message):
+     # Получаем информацию о видео
+    video = message.video
+    file_id = video.file_id
     file_info = bot.get_file(file_id)
+
+    # Создаем имя файла для сохранения видео
+    file_name = f"{message.chat.id}_{file_id}.mp4"
+
+    # Загружаем видео
     file = bot.download_file(file_info.file_path)
-    file_name = 'uploaded_video.mp4'
+
+    # Сохраняем видео на сервере
     with open(file_name, 'wb') as f:
         f.write(file)
 
@@ -86,6 +104,53 @@ def video_handler(message):
                 bot.send_audio(message.chat.id, song_file)
         else:
             bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
+
+
+
+@bot.message_handler(content_types=['video_note'])
+def handle_round_video(message):
+    # Получаем информацию о видео
+    video_note = message.video_note
+    file_id = video_note.file_id
+    file_info = bot.get_file(file_id)
+
+    # Создаем имя файла для сохранения круглого видео
+    file_name = f"{message.chat.id}_{file_id}.mp4"
+
+    # Загружаем видео
+    file = bot.download_file(file_info.file_path)
+
+    # Сохраняем видео на сервере
+    with open(file_name, 'wb') as f:
+        f.write(file)
+
+
+
+    # Отправляем круглое видео обратно в чат
+    with open(file_name, 'rb') as round_video_file:
+        bot.send_video_note(message.chat.id, round_video_file)
+
+    music_directories = ['sad', 'angry', 'disgust', 'happy', 'fear',
+                         'surprise']
+    playlist_creator = PlaylistMaker(file_name)
+    folder_list = playlist_creator.make_playlist()
+
+    for i in range(len(folder_list)):
+        folder = folder_list[i]
+        if folder_list[i] == 'neutral':
+            folder = random.choice(music_directories)
+        # Получаем список файлов в выбранной папке
+        songs_in_directory = os.listdir(folder)
+        if songs_in_directory:
+            # Выбираем случайную песню из выбранной папки
+            random_song = random.choice(songs_in_directory)
+            song_path = os.path.join(folder, random_song)
+            # Отправляем песню пользователю
+            with open(song_path, 'rb') as song_file:
+                bot.send_audio(message.chat.id, song_file)
+        else:
+            bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
+
 
 
 
