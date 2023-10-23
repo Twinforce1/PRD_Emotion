@@ -11,20 +11,14 @@ bot = telebot.TeleBot('6576799018:AAEc7sN9LskdEWqt9h8-k819UU1K8LioUSY')
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton("Отправить фотографию")
-    markup.add(btn1)
     bot.send_message(message.chat.id,
-                     text="Привет, {0.first_name}! Я бот для подбора музыкального плейлиста по твоему настроению. Отправь мне своё фото и я скажу, что тебе нужно.".format(
+                     text="Привет, {0.first_name}! Я бот для подбора музыкального плейлиста по твоему настроению. Отправь мне своё фото или видео и я скажу, что тебе нужно.".format(
                          message.from_user), reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
 def func(message):
-    if (message.text == "Отправить фотографию"):
-        bot.send_message(message.chat.id, text="Жду фотографию твоего лица для определения настроения")
-
-    else:
-        bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
+    bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
 
 @bot.message_handler(content_types=['photo'])
 def photo_handler(message):
