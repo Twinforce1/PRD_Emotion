@@ -151,6 +151,11 @@ def handle_round_video(message):
         else:
             bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
 
+        # Удаляем сохраненное круглое видео
+    os.remove(file_name)
+
+
+
 
 
 
