@@ -5,7 +5,6 @@ from fer import FER
 class PlaylistCreator:
     def __init__(self, image):
         self.image = image
-        self.emotion_list = []
         self.emotions = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
 
     def scan_emotions(self):

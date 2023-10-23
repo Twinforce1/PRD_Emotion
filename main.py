@@ -2,6 +2,7 @@ import telebot
 from telebot import types  # для указание типов
 import config
 import random
+from video import PlaylistMaker
 from emo import PlaylistCreator
 import os
 
@@ -54,6 +55,38 @@ def photo_handler(message):
                 bot.send_audio(message.chat.id, song_file)
         else:
             bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
+
+@bot.message_handler(content_types = ['video'])
+def video_handler(message):
+    video = message.video[-1]
+    file_id = photo.file_id
+    file_info = bot.get_file(file_id)
+    file = bot.download_file(file_info.file_path)
+    file_name = 'uploaded_video.mp4'
+    with open(file_name, 'wb') as f:
+        f.write(file)
+
+    music_directories = ['sad', 'angry', 'disgust', 'happy', 'fear',
+                         'surprise']
+    playlist_creator = PlaylistMaker(file_name)
+    folder_list = playlist_creator.make_playlist()
+
+    for i in range(len(folder_list)):
+        folder = folder_list[i]
+        if folder_list[i] == 'neutral':
+            folder = random.choice(music_directories)
+        # Получаем список файлов в выбранной папке
+        songs_in_directory = os.listdir(folder)
+        if songs_in_directory:
+            # Выбираем случайную песню из выбранной папки
+            random_song = random.choice(songs_in_directory)
+            song_path = os.path.join(folder, random_song)
+            # Отправляем песню пользователю
+            with open(song_path, 'rb') as song_file:
+                bot.send_audio(message.chat.id, song_file)
+        else:
+            bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
+
 
 
 bot.polling(none_stop=True)

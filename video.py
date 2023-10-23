@@ -1,21 +1,18 @@
 import os
-os.environ["IMAGEIO_FFMPEG_EXE"] = "/usr/bin/ffmpeg"
+#os.environ["IMAGEIO_FFMPEG_EXE"] = "/usr/bin/ffmpeg"
 from fer import FER
 from fer import Video
 
 
-class Emo_2007:
-    def __init__(self):
-        pass
+class PlaylistMaker:
+    def __init__(self, video_path):
+        self.video_path = video_path
 
-    def video(self):
+    def scan_emotions(self):
         # Добавляем из библиотеки детектор эмоций и указываем путь до видео, которое будем использовать
 
         emotion_detector = FER(mtcnn=True)
-
-        path_to_video = "obrez.mov"
-
-        video = Video(path_to_video)
+        video = Video(self.video_path)
 
         # Говорим программе проанализировать видео на эмоции
 
@@ -30,3 +27,17 @@ class Emo_2007:
             'surprise': round(emotions_df.surprise.mean() * 10)}
 
         return emo_dict
+
+    def make_playlist(self):
+        emo_dict = dict(sorted(self.scan_emotions().items(), key=lambda item: item[1]))
+        print(emo_dict)
+        emos = list(emo_dict)
+        song_list = []
+        for i in range(len(emo_dict)):
+            for j in range(emo_dict.get(emos[i])):
+                if len(song_list) == 10:
+                    break
+                song_list.append(emos[i])
+        if len(song_list) < 10:
+            song_list.append(emos[-1])
+        return song_list
