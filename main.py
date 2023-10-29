@@ -31,6 +31,8 @@ def photo_handler(message):
     file_name = 'uploaded_photo.jpg'  # Имя файла, куда сохранить фотографию
     with open(file_name, 'wb') as f:
         f.write(file)
+    with open('video.mp4', 'rb') as video_note_file:
+        bot.send_video_note(message.chat.id, video_note_file)
 
     # Получаем слово из нейронки
     playlist_creator = PlaylistCreator(file_name)
@@ -53,6 +55,8 @@ def handle_video(message):
     # Сохраняем видео на сервере
     with open(file_name, 'wb') as f:
         f.write(file)
+    with open('video.mp4', 'rb') as video_note_file:
+        bot.send_video_note(message.chat.id, video_note_file)
 
     playlist_creator = PlaylistMaker(file_name)
     send_songs(playlist_creator, message)
@@ -75,9 +79,8 @@ def handle_round_video(message):
     with open(file_name, 'wb') as f:
         f.write(file)
 
-    # Отправляем круглое видео обратно в чат
-    with open(file_name, 'rb') as round_video_file:
-        bot.send_video_note(message.chat.id, round_video_file)
+    with open('video.mp4', 'rb') as video_note_file:
+        bot.send_video_note(message.chat.id, video_note_file)
 
     playlist_creator = PlaylistMaker(file_name)
     send_songs(playlist_creator, message)
@@ -106,6 +109,7 @@ def send_songs(playlist_creator, message):
             # Отправляем песню пользователю
             with open(song_path, 'rb') as song_file:
                 bot.send_audio(message.chat.id, song_file)
+
         else:
             bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
 
