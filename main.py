@@ -34,7 +34,7 @@ def photo_handler(message):
 
     # Получаем слово из нейронки
     playlist_creator = PlaylistCreator(file_name)
-    send_songs(playlist_creator)
+    send_songs(playlist_creator, message)
 
 
 @bot.message_handler(content_types=['video'])
@@ -55,7 +55,7 @@ def handle_video(message):
         f.write(file)
 
     playlist_creator = PlaylistMaker(file_name)
-    send_songs(playlist_creator)
+    send_songs(playlist_creator, message)
 
 
 @bot.message_handler(content_types=['video_note'])
@@ -80,11 +80,11 @@ def handle_round_video(message):
         bot.send_video_note(message.chat.id, round_video_file)
 
     playlist_creator = PlaylistMaker(file_name)
-    send_songs(playlist_creator)
+    send_songs(playlist_creator, message)
         # Удаляем сохраненное круглое видео
     os.remove(file_name)
 
-def send_songs(playlist_creator):
+def send_songs(playlist_creator, message):
     music_directories = ['sad', 'angry', 'disgust', 'happy', 'fear',
                          'surprise']
     folder_list = playlist_creator.make_playlist()
