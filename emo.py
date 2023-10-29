@@ -21,7 +21,7 @@ class PlaylistCreator:
             result[self.emotions[i]] = int(round(cur_emo * 10))
         return result
 
-    def create_playlist(self):
+    def make_playlist(self):
         emo_dict = dict(sorted(self.scan_emotions().items(), key=lambda item: item[1]))
         print(emo_dict)
         emos = list(emo_dict)
