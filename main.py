@@ -13,7 +13,7 @@ bot = telebot.TeleBot('6576799018:AAEc7sN9LskdEWqt9h8-k819UU1K8LioUSY')
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     bot.send_message(message.chat.id,
-                     text="Привет, {0.first_name}! Я бот для подбора музыкального плейлиста по твоему настроению. Отправь мне своё фото или видео и я скажу, что тебе нужно.".format(
+                     text="Привет, {0.first_name}! Я бот для подбора музыкального плейлиста по твоему настроению. Отправь мне своё фото или видео (не более 5 секунд) и я скажу, что тебе нужно.".format(
                          message.from_user), reply_markup=markup)
 
 
