@@ -58,4 +58,4 @@
 
 ## Лицензия
 
-PRD© Entertaiment. All rights reserved.
+PRD<sup>©</sup> Entertaiment. All rights reserved.
