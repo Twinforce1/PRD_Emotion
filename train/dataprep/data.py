@@ -5,7 +5,7 @@ import os
 
 print('Введи название папки')
 folder = 'input'
-mtcnn = MTCNN(image_size=48, margin=0)
+mtcnn = MTCNN(image_size=48, margin=0, keep_all=True)
 resnet = InceptionResnetV1(pretrained='vggface2').eval()
 
 #читаем файлы в папке
