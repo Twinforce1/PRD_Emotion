@@ -1,0 +1,6 @@
+opencv-python~=4.8.1.78
+fer~=22.5.1
+telebot~=0.0.5
+config~=0.5.1
+facenet-pytorch~=2.5.3
+Pillow~=10.0.1
