@@ -4,3 +4,4 @@ telebot~=0.0.5
 config~=0.5.1
 facenet-pytorch~=2.5.3
 Pillow~=10.0.1
+yandex-music~=2.1.1

@@ -1,7 +1,6 @@
 import telebot
-from telebot import types  # для указание типов
-import config
-import random
+from telebot import types  # для указания типов
+from ya_music import YaMusic, PlaylistIDs, convert_to_id
 from video import PlaylistMaker
 from emo import PlaylistCreator
 import os
@@ -20,6 +19,7 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def func(message):
     bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
+
 
 @bot.message_handler(content_types=['photo'])
 def photo_handler(message):
@@ -41,13 +41,13 @@ def photo_handler(message):
 
 @bot.message_handler(content_types=['video'])
 def handle_video(message):
-     # Получаем информацию о видео
+    # Получаем информацию о видео
     video = message.video
     file_id = video.file_id
     file_info = bot.get_file(file_id)
 
     # Создаем имя файла для сохранения видео
-    file_name = f"{message.chat.id}_{file_id}.mp4"
+    file_name = f"uploaded_video.mp4"
 
     # Загружаем видео
     file = bot.download_file(file_info.file_path)
@@ -84,35 +84,28 @@ def handle_round_video(message):
 
     playlist_creator = PlaylistMaker(file_name)
     send_songs(playlist_creator, message)
-        # Удаляем сохраненное круглое видео
+    # Удаляем сохраненное круглое видео
     os.remove(file_name)
 
+
 def send_songs(playlist_creator, message):
-    music_directories = ['sad', 'angry', 'disgust', 'happy', 'fear',
-                         'surprise']
     folder_list = playlist_creator.make_playlist()
-    sent_songs = set()
-
-    for i in range(len(folder_list)):
-        folder = '../music/' + folder_list[i]
-        if folder_list[i] == 'neutral':
-            folder = '../music/' + random.choice(music_directories)
-        # Получаем список файлов в выбранной папке
-        songs_in_directory = os.listdir(folder)
-        if songs_in_directory:
-            # Выбираем случайную песню из выбранной папки
-            random_song = random.choice(songs_in_directory)
-            while random_song in sent_songs:
-                random_song = random.choice(songs_in_directory)
-            sent_songs.add(random_song)
-            song_path = os.path.join(folder, random_song)
-            # Отправляем песню пользователю
-            with open(song_path, 'rb') as song_file:
-                bot.send_audio(message.chat.id, song_file)
-
-        else:
-            bot.send_message(message.chat.id, f"В папке {folder} нет песен.")
-
+    bot.send_message(message.chat.id, 'Плейлист обрабатывается, пожалуйста подождите')
+    ya_downloader = YaMusic()
+    # скачиваем песни по списку
+    for folder in folder_list:
+        playlist = convert_to_id(folder=folder)
+        title = ya_downloader.download_track(playlist=playlist)
+        print(title)
+        with open(title, 'rb') as song:
+            bot.send_audio(message.chat.id, song)
+        os.remove(title)
+    ya_downloader.clear()
+    os.remove('uploaded_video.mp4')
+    os.remove('data.csv')
+    os.remove('output/uploaded_video_output.mp4')
+    os.remove('output/images.zip')
+    print('песни отправлены')
 
 
 print('Бот включен')
